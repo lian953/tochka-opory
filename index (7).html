@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#231815">
+  <meta name="description" content="Точка опоры — кризисный психологический центр. Помогаем пройти через сложный период и восстановить внутреннюю устойчивость.">
+  <title>Точка опоры — кризисный психологический центр</title>
+  <style>
+    :root {
+      --yellow: #F5EFC6;
+      --red: #4D0E12;
+      --blue: #A5BCD6;
+      --soil: #4A2E27;
+      --brown: #231815;
+      --brown-deep: #19110f;
+      --text: #F5EFC6;
+      --muted: rgba(245,239,198,.66);
+      --line: rgba(245,239,198,.16);
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: Inter, "Segoe UI", Arial, sans-serif;
+      --ease: cubic-bezier(.2,.75,.25,1);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 92px; }
+    body {
+      margin: 0;
+      background: var(--brown);
+      color: var(--text);
+      font-family: var(--sans);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+      opacity: .16;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.16'/%3E%3C/svg%3E");
+    }
+    a { color: inherit; text-decoration: none; }
+    button, input, textarea { font: inherit; }
+    button { cursor: pointer; }
+    .container { width: min(1160px, calc(100% - 48px)); margin: 0 auto; }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 12px;
+      color: var(--blue); text-transform: uppercase; letter-spacing: .18em;
+      font-size: .7rem; font-weight: 700;
+    }
+    .eyebrow::before { content: ""; width: 28px; height: 1px; background: currentColor; }
+    .serif { font-family: var(--serif); font-weight: 400; letter-spacing: -.045em; }
+    .muted { color: var(--muted); }
+    .section { padding: 118px 0; position: relative; }
+    .section-heading { max-width: 720px; margin-bottom: 54px; }
+    .section-heading h2 { font: 400 clamp(2.5rem, 5vw, 4.6rem)/1.02 var(--serif); letter-spacing: -.045em; margin: 18px 0; }
+    .section-heading p { max-width: 570px; color: var(--muted); margin: 0; }
+    .accent { color: var(--blue); }
+    .button {
+      display: inline-flex; align-items: center; justify-content: center; gap: 12px;
+      border: 1px solid transparent; padding: 15px 22px; min-height: 52px;
+      background: var(--red); color: var(--yellow); border-radius: 2px;
+      font-size: .78rem; font-weight: 700; letter-spacing: .06em;
+      transition: transform .3s var(--ease), background .3s, border-color .3s;
+    }
+    .button:hover { transform: translateY(-3px); background: #68191e; }
+    .button.secondary { background: transparent; border-color: var(--line); }
+    .button.secondary:hover { border-color: var(--blue); background: rgba(165,188,214,.08); }
+    .arrow { font-size: 1.1rem; transition: transform .3s; }
+    .button:hover .arrow { transform: translateX(4px); }
+
+    /* Навигация */
+    .header {
+      position: fixed; z-index: 20; top: 0; left: 0; right: 0;
+      border-bottom: 1px solid transparent;
+      transition: background .35s, border-color .35s, backdrop-filter .35s;
+    }
+    .header.scrolled { background: rgba(35,24,21,.9); border-color: var(--line); backdrop-filter: blur(16px); }
+    .nav { height: 82px; display: flex; align-items: center; justify-content: space-between; gap: 28px; }
+    .brand { display: flex; align-items: center; gap: 12px; min-width: max-content; }
+    .brand-mark {
+      width: 34px; height: 34px; border: 1px solid var(--blue); border-radius: 50%;
+      display: grid; place-items: center; color: var(--blue); font: 1.25rem var(--serif);
+    }
+    .brand-name { font: 1.18rem var(--serif); letter-spacing: -.03em; }
+    .nav-links { display: flex; gap: clamp(12px, 2vw, 27px); align-items: center; }
+    .nav-links a { font-size: .68rem; color: var(--muted); transition: color .25s; white-space: nowrap; }
+    .nav-links a:hover, .nav-links a.active { color: var(--yellow); }
+    .nav-cta { padding: 11px 15px; font-size: .67rem; }
+    .menu-toggle { display: none; background: none; color: var(--yellow); border: 1px solid var(--line); width: 42px; height: 42px; }
+
+    /* Первый экран */
+    .hero {
+      min-height: 790px; min-height: min(900px, 100svh);
+      display: flex; align-items: center; position: relative; overflow: hidden;
+      padding: 150px 0 90px;
+      background:
+        radial-gradient(ellipse at 78% 44%, rgba(77,14,18,.58), transparent 34%),
+        radial-gradient(ellipse at 68% 80%, rgba(165,188,214,.12), transparent 30%),
+        linear-gradient(115deg, #231815 0%, #281a17 55%, #1b1210 100%);
+    }
+    .hero::after {
+      content: ""; position: absolute; width: min(54vw, 700px); aspect-ratio: 1;
+      right: -8%; top: 12%; border: 1px solid rgba(165,188,214,.18); border-radius: 50%;
+      box-shadow: 0 0 0 55px rgba(165,188,214,.025), 0 0 0 110px rgba(165,188,214,.02);
+      animation: orbit 28s linear infinite; pointer-events: none;
+    }
+    .hero-orb {
+      position: absolute; width: min(38vw, 490px); aspect-ratio: 1; right: 8%; top: 22%;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 32%, rgba(165,188,214,.28), rgba(77,14,18,.1) 38%, transparent 70%);
+      filter: blur(2px); animation: breathe 8s ease-in-out infinite alternate;
+    }
+    .hero-content { position: relative; z-index: 2; max-width: 760px; }
+    .hero h1 { font: 400 clamp(4.3rem, 10vw, 9.4rem)/.88 var(--serif); letter-spacing: -.075em; margin: 30px 0 26px; }
+    .hero h1 span { display: block; color: var(--blue); font-style: italic; padding-left: clamp(28px, 9vw, 120px); }
+    .hero-lead { max-width: 480px; margin: 0 0 34px clamp(0px, 9vw, 120px); font: 400 clamp(1.05rem, 1.6vw, 1.3rem)/1.5 var(--serif); color: rgba(245,239,198,.82); }
+    .hero-actions { margin-left: clamp(0px, 9vw, 120px); display: flex; flex-wrap: wrap; gap: 12px; }
+    .hero-note { position: absolute; bottom: 42px; right: 0; color: var(--muted); font-size: .66rem; letter-spacing: .12em; text-transform: uppercase; }
+    .scroll-cue { position: absolute; bottom: 40px; left: 0; display: flex; align-items: center; gap: 12px; color: var(--muted); font-size: .65rem; letter-spacing: .12em; text-transform: uppercase; }
+    .scroll-cue::before { content: ""; width: 40px; height: 1px; background: var(--blue); }
+
+    /* О центре */
+    .about-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: 9vw; align-items: start; }
+    .about-statement { font: 400 clamp(2rem, 4vw, 3.7rem)/1.12 var(--serif); letter-spacing: -.04em; margin: 0; }
+    .about-copy { color: var(--muted); max-width: 510px; }
+    .about-copy p { margin: 0 0 20px; }
+    .principles { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--line); margin-top: 72px; border: 1px solid var(--line); }
+    .principle { background: var(--brown); padding: 25px 26px 28px; min-height: 150px; }
+    .principle b { display: block; font: 1.45rem var(--serif); font-weight: 400; margin-bottom: 9px; }
+    .principle span { color: var(--muted); font-size: .78rem; }
+
+    /* Направления */
+    .directions { background: var(--brown-deep); }
+    .direction-grid { display: grid; grid-template-columns: repeat(2,1fr); border-top: 1px solid var(--line); border-left: 1px solid var(--line); }
+    .direction-card {
+      min-height: 215px; padding: 30px 32px; position: relative; overflow: hidden;
+      border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
+      transition: background .35s;
+    }
+    .direction-card:hover { background: rgba(74,46,39,.42); }
+    .direction-number { color: var(--blue); font: 1rem var(--serif); }
+    .direction-card h3 { font: 400 clamp(1.5rem, 2.5vw, 2.15rem)/1.1 var(--serif); margin: 24px 0 10px; }
+    .direction-card p { max-width: 470px; color: var(--muted); font-size: .82rem; margin: 0; }
+    .direction-card::after {
+      content: ""; position: absolute; width: 120px; height: 120px; right: -60px; bottom: -70px;
+      border: 1px solid rgba(165,188,214,.18); border-radius: 50%; transition: transform .5s var(--ease);
+    }
+    .direction-card:hover::after { transform: scale(2); }
+
+    /* Услуги */
+    .services-layout { display: grid; grid-template-columns: .72fr 1.28fr; gap: 9vw; }
+    .services-intro { position: sticky; top: 130px; align-self: start; }
+    .services-intro p { color: var(--muted); max-width: 300px; }
+    .service-list { border-top: 1px solid var(--line); }
+    .service-item { border-bottom: 1px solid var(--line); }
+    .service-trigger {
+      width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 20px;
+      padding: 24px 0; background: none; border: 0; color: var(--yellow); text-align: left;
+    }
+    .service-trigger span:first-child { display: flex; align-items: baseline; gap: 24px; }
+    .service-index { color: var(--blue); font: .9rem var(--serif); }
+    .service-title { font: 400 clamp(1.25rem, 2.1vw, 1.8rem) var(--serif); }
+    .service-plus { width: 30px; height: 30px; border: 1px solid var(--line); border-radius: 50%; display: grid; place-items: center; transition: transform .3s, background .3s; }
+    .service-item.open .service-plus { transform: rotate(45deg); background: var(--red); }
+    .service-detail { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .4s var(--ease); }
+    .service-detail > div { overflow: hidden; }
+    .service-detail p { color: var(--muted); max-width: 600px; margin: 0; padding: 0 45px 24px 54px; font-size: .86rem; }
+    .service-item.open .service-detail { grid-template-rows: 1fr; }
+
+    /* Специалисты */
+    .team { background: #2b1d19; }
+    .team-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+    .team-card { background: #2b1d19; padding: 30px; min-height: 245px; transition: background .3s; }
+    .team-card:hover { background: #35231e; }
+    .team-symbol { width: 42px; height: 42px; border: 1px solid rgba(165,188,214,.55); color: var(--blue); border-radius: 50%; display: grid; place-items: center; font: 1.2rem var(--serif); margin-bottom: 35px; }
+    .team-card h3 { font: 400 1.55rem/1.1 var(--serif); margin: 0 0 12px; }
+    .team-card p { color: var(--muted); font-size: .8rem; margin: 0; }
+
+    /* Как получить помощь */
+    .process { display: grid; grid-template-columns: repeat(3,1fr); gap: 35px; counter-reset: step; }
+    .process-step { border-top: 1px solid var(--line); padding-top: 20px; }
+    .process-step::before { counter-increment: step; content: "0" counter(step); color: var(--blue); font: 1rem var(--serif); }
+    .process-step h3 { font: 400 1.7rem var(--serif); margin: 25px 0 10px; }
+    .process-step p { color: var(--muted); font-size: .83rem; margin: 0; }
+    .format-note { margin-top: 65px; padding: 30px; border: 1px solid var(--line); display: flex; justify-content: space-between; gap: 35px; align-items: center; }
+    .format-note strong { font: 400 1.6rem var(--serif); }
+    .format-note p { max-width: 500px; color: var(--muted); font-size: .82rem; margin: 0; }
+
+    /* Кризисная линия */
+    .hotline { background: var(--red); overflow: hidden; }
+    .hotline::after { content: "+"; position: absolute; right: 8%; top: -130px; font: 35rem/.9 var(--serif); color: rgba(245,239,198,.045); pointer-events: none; }
+    .hotline-inner { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr .8fr; gap: 8vw; align-items: end; }
+    .hotline .eyebrow { color: var(--yellow); opacity: .7; }
+    .hotline-inner > div { max-width: 760px; }
+    .hotline h2 { font: 400 clamp(3rem, 6vw, 6rem)/.98 var(--serif); letter-spacing: -.055em; margin: 20px 0; }
+    .hotline p { color: rgba(245,239,198,.75); max-width: 520px; }
+    .hotline-box { border: 1px solid rgba(245,239,198,.3); padding: 28px; background: rgba(35,24,21,.15); }
+    .hotline-box small { display: block; color: rgba(245,239,198,.7); text-transform: uppercase; letter-spacing: .13em; font-size: .65rem; }
+    .hotline-box strong { display: block; font: 400 clamp(1.7rem, 3vw, 2.7rem) var(--serif); margin: 12px 0; }
+    .hotline-box p { font-size: .76rem; margin: 0; }
+    .urgent-note { font-size: .72rem !important; border-left: 2px solid var(--blue); padding-left: 15px; margin-top: 26px !important; }
+
+    footer { padding: 28px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: .68rem; }
+    .footer-inner { display: flex; justify-content: space-between; gap: 25px; align-items: center; }
+
+    /* Появление при прокрутке */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .delay-1 { transition-delay: .1s; } .delay-2 { transition-delay: .2s; } .delay-3 { transition-delay: .3s; }
+    @keyframes orbit { to { transform: rotate(360deg); } }
+    @keyframes breathe { from { transform: scale(.92); opacity: .65; } to { transform: scale(1.08); opacity: 1; } }
+
+    @media (max-width: 900px) {
+      .nav-links { gap: 12px; }
+      .nav-links a { font-size: .61rem; }
+      .nav-cta { display: none; }
+      .about-grid, .services-layout, .hotline-inner { grid-template-columns: 1fr; gap: 45px; }
+      .services-intro { position: static; }
+      .team-grid { grid-template-columns: repeat(2,1fr); }
+      .hotline-inner { align-items: start; }
+    }
+    @media (max-width: 680px) {
+      .container { width: min(100% - 36px, 540px); }
+      .section { padding: 82px 0; }
+      .nav { height: 70px; }
+      .menu-toggle { display: grid; place-items: center; }
+      .nav-links {
+        display: none; position: absolute; top: 70px; left: 0; right: 0;
+        padding: 20px 24px 26px; background: rgba(35,24,21,.98);
+        border-bottom: 1px solid var(--line); flex-direction: column; align-items: stretch; gap: 0;
+      }
+      .nav-links.open { display: flex; }
+      .nav-links a { padding: 12px 0; font-size: .78rem; border-bottom: 1px solid var(--line); }
+      .hero { min-height: 760px; padding-top: 125px; }
+      .hero::after { width: 90vw; right: -45%; top: 30%; }
+      .hero-orb { width: 75vw; right: -12%; top: 34%; }
+      .hero h1 { font-size: clamp(4rem, 19vw, 6.7rem); }
+      .hero h1 span, .hero-lead, .hero-actions { margin-left: 0; padding-left: 0; }
+      .hero-lead { max-width: 390px; }
+      .hero-note { display: none; }
+      .scroll-cue { bottom: 28px; }
+      .principles { grid-template-columns: 1fr; margin-top: 45px; }
+      .principle { min-height: auto; }
+      .direction-grid { grid-template-columns: 1fr; }
+      .direction-card { min-height: 185px; padding: 25px; }
+      .service-trigger { padding: 20px 0; }
+      .service-trigger span:first-child { gap: 14px; }
+      .service-detail p { padding-left: 37px; }
+      .team-grid { grid-template-columns: 1fr; }
+      .team-card { min-height: auto; }
+      .team-symbol { margin-bottom: 22px; }
+      .process { grid-template-columns: 1fr; gap: 30px; }
+      .format-note { flex-direction: column; align-items: flex-start; margin-top: 45px; padding: 23px; }
+      .hotline-box { padding: 23px; }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+      .reveal { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header" id="header">
+    <div class="container nav">
+      <a class="brand" href="#home" aria-label="Точка опоры — на главную">
+        <span class="brand-mark">т</span><span class="brand-name">Точка опоры</span>
+      </a>
+      <nav class="nav-links" id="navLinks" aria-label="Основная навигация">
+        <a href="#about">О центре</a>
+        <a href="#directions">Направления</a>
+        <a href="#services">Услуги</a>
+        <a href="#team">Специалисты</a>
+        <a href="#process">Как получить помощь</a>
+        <a href="#hotline">Кризисная линия</a>
+      </nav>
+      <a class="button nav-cta" href="#hotline">Получить поддержку <span class="arrow">↗</span></a>
+      <button class="menu-toggle" id="menuToggle" aria-label="Открыть меню" aria-expanded="false">☰</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- 1. Главная -->
+    <section class="hero" id="home">
+      <div class="hero-orb" aria-hidden="true"></div>
+      <div class="container">
+        <div class="hero-content">
+          <span class="eyebrow reveal">Кризисный психологический центр</span>
+          <h1 class="reveal delay-1">Точка <span>опоры</span></h1>
+          <p class="hero-lead reveal delay-2">Ваш путь продолжается. Мы поможем пройти его.</p>
+          <div class="hero-actions reveal delay-3">
+            <a class="button" href="#services">Как мы помогаем <span class="arrow">↗</span></a>
+            <a class="button secondary" href="#hotline">Нужна срочная поддержка</a>
+          </div>
+        </div>
+        <div class="scroll-cue">Прокрутите, чтобы узнать больше</div>
+        <div class="hero-note">Поддержка в сложные периоды жизни</div>
+      </div>
+    </section>
+
+    <!-- 2. О центре -->
+    <section class="section" id="about">
+      <div class="container">
+        <div class="section-heading reveal">
+          <span class="eyebrow">01 / О центре</span>
+        </div>
+        <div class="about-grid">
+          <p class="about-statement reveal">Иногда привычный мир меняется. <span class="accent">Необязательно проходить через это в одиночку.</span></p>
+          <div class="about-copy reveal delay-1">
+            <p>«Точка опоры» — кризисный психологический центр, созданный для поддержки людей, оказавшихся в сложных жизненных обстоятельствах.</p>
+            <p>Наша задача — помочь разобраться в переживаниях, восстановить внутренние ресурсы и постепенно вернуть ощущение устойчивости. Мы не оцениваем и не обесцениваем чужой опыт: каждый человек имеет право на внимательное отношение и профессиональную помощь.</p>
+            <p>Мы верим, что кризис может стать этапом жизненного пути, а не его конечной точкой.</p>
+          </div>
+        </div>
+        <div class="principles reveal">
+          <div class="principle"><b>Бережность</b><span>Уважение к личному опыту и границам человека.</span></div>
+          <div class="principle"><b>Профессионализм</b><span>Компетентная помощь с учётом ситуации и потребностей.</span></div>
+          <div class="principle"><b>Устойчивость</b><span>Поиск ресурсов, которые помогут двигаться дальше.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Направления помощи -->
+    <section class="section directions" id="directions">
+      <div class="container">
+        <div class="section-heading reveal">
+          <span class="eyebrow">02 / Направления помощи</span>
+          <h2>Разные ситуации.<br><span class="accent">Право на поддержку.</span></h2>
+          <p>Кризис может выглядеть по-разному. Мы помогаем людям справляться с переживаниями, связанными с разными жизненными обстоятельствами.</p>
+        </div>
+        <div class="direction-grid">
+          <article class="direction-card reveal"><span class="direction-number">01</span><h3>Личностные кризисы</h3><p>Потеря жизненных ориентиров, поиск себя, внутренние противоречия и ощущение неопределённости.</p></article>
+          <article class="direction-card reveal delay-1"><span class="direction-number">02</span><h3>Семейные и межличностные кризисы</h3><p>Конфликты, расставание, развод, нарушение взаимопонимания и сложности в отношениях.</p></article>
+          <article class="direction-card reveal"><span class="direction-number">03</span><h3>Травматический опыт</h3><p>Психологическая поддержка после тяжёлых событий и опыта, повлиявшего на чувство безопасности.</p></article>
+          <article class="direction-card reveal delay-1"><span class="direction-number">04</span><h3>Кризисы утраты</h3><p>Помощь в проживании горя после смерти близкого человека и других значимых потерь.</p></article>
+          <article class="direction-card reveal"><span class="direction-number">05</span><h3>Эмоциональные кризисы</h3><p>Сильная тревога, стресс, эмоциональное истощение и трудности с саморегуляцией.</p></article>
+          <article class="direction-card reveal delay-1"><span class="direction-number">06</span><h3>Социальные кризисы</h3><p>Одиночество, изоляция, сложности адаптации и ощущение потери связи с окружающими.</p></article>
+          <article class="direction-card reveal"><span class="direction-number">07</span><h3>Острые кризисные состояния</h3><p>Первичная психологическая поддержка в ситуации сильного эмоционального потрясения.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Услуги -->
+    <section class="section" id="services">
+      <div class="container">
+        <div class="services-layout">
+          <div class="services-intro reveal">
+            <span class="eyebrow">03 / Наши услуги</span>
+            <h2 class="section-heading" style="margin:18px 0 20px"><span class="serif" style="font-size:clamp(2.5rem,5vw,4.6rem);line-height:1.02">Поддержка, <span class="accent">которая подходит вам.</span></span></h2>
+            <p>Формат помощи подбирается с учётом запроса, обстоятельств и состояния человека.</p>
+          </div>
+          <div class="service-list reveal delay-1">
+            <div class="service-item open">
+              <button class="service-trigger" aria-expanded="true"><span><span class="service-index">01</span><span class="service-title">Индивидуальные консультации</span></span><span class="service-plus">+</span></button>
+              <div class="service-detail"><div><p>Личная работа с психологом, возможность спокойно обсудить переживания, определить актуальные трудности и наметить дальнейшие шаги.</p></div></div>
+            </div>
+            <div class="service-item">
+              <button class="service-trigger" aria-expanded="false"><span><span class="service-index">02</span><span class="service-title">Экстренная психологическая поддержка</span></span><span class="service-plus">+</span></button>
+              <div class="service-detail"><div><p>Первичная эмоциональная поддержка в острых ситуациях: помощь сориентироваться, снизить напряжение и определить, какая помощь необходима дальше.</p></div></div>
+            </div>
+            <div class="service-item">
+              <button class="service-trigger" aria-expanded="false"><span><span class="service-index">03</span><span class="service-title">Кризисное консультирование</span></span><span class="service-plus">+</span></button>
+              <div class="service-detail"><div><p>Краткосрочная психологическая работа, направленная на осмысление кризисной ситуации, поиск доступных ресурсов и восстановление чувства контроля.</p></div></div>
+            </div>
+            <div class="service-item">
+              <button class="service-trigger" aria-expanded="false"><span><span class="service-index">04</span><span class="service-title">Семейное и парное консультирование</span></span><span class="service-plus">+</span></button>
+              <div class="service-detail"><div><p>Работа с трудностями общения, конфликтами и изменениями в отношениях. Помощь в поиске взаимопонимания и способов конструктивного диалога.</p></div></div>
+            </div>
+            <div class="service-item">
+              <button class="service-trigger" aria-expanded="false"><span><span class="service-index">05</span><span class="service-title">Группы психологической поддержки</span></span><span class="service-plus">+</span></button>
+              <div class="service-detail"><div><p>Организованные встречи, где участники могут получить поддержку, обменяться опытом в комфортных границах и почувствовать, что они не одни.</p></div></div>
+            </div>
+            <div class="service-item">
+              <button class="service-trigger" aria-expanded="false"><span><span class="service-index">06</span><span class="service-title">Помощь при переживании утраты</span></span><span class="service-plus">+</span></button>
+              <div class="service-detail"><div><p>Бережное сопровождение в период горевания с уважением к индивидуальному темпу и особенностям переживания потери.</p></div></div>
+            </div>
+            <div class="service-item">
+              <button class="service-trigger" aria-expanded="false"><span><span class="service-index">07</span><span class="service-title">Восстановление после травматического опыта</span></span><span class="service-plus">+</span></button>
+              <div class="service-detail"><div><p>Психологическая помощь в работе с последствиями тяжёлых событий. Темп и методы работы определяются совместно со специалистом.</p></div></div>
+            </div>
+            <div class="service-item">
+              <button class="service-trigger" aria-expanded="false"><span><span class="service-index">08</span><span class="service-title">Психообразовательные встречи</span></span><span class="service-plus">+</span></button>
+              <div class="service-detail"><div><p>Лекции и практические встречи о стрессе, эмоциональной саморегуляции, психологической устойчивости и способах заботы о себе.</p></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Специалисты -->
+    <section class="section team" id="team">
+      <div class="container">
+        <div class="section-heading reveal">
+          <span class="eyebrow">04 / Наши специалисты</span>
+          <h2>Помощь начинается<br>с <span class="accent">понимания.</span></h2>
+          <p>В центре предусмотрены специалисты разных направлений, чтобы подобрать подходящую форму поддержки.</p>
+        </div>
+        <div class="team-grid">
+          <article class="team-card reveal"><div class="team-symbol">Ψ</div><h3>Клинические психологи</h3><p>Работают с выраженными эмоциональными трудностями, оценивают психологическое состояние и помогают определить дальнейшую тактику поддержки.</p></article>
+          <article class="team-card reveal delay-1"><div class="team-symbol">◌</div><h3>Психологи-консультанты</h3><p>Проводят индивидуальные консультации, помогают разобраться в переживаниях, жизненных обстоятельствах и личных ресурсах.</p></article>
+          <article class="team-card reveal delay-2"><div class="team-symbol">⌂</div><h3>Семейные психологи</h3><p>Сопровождают пары и семьи в период конфликтов, перемен и трудностей во взаимодействии.</p></article>
+          <article class="team-card reveal"><div class="team-symbol">✳</div><h3>Специалисты по кризисной интервенции</h3><p>Оказывают первичную помощь при острых кризисных состояниях и помогают организовать дальнейшую поддержку.</p></article>
+          <article class="team-card reveal delay-1"><div class="team-symbol">◎</div><h3>Ведущие групп поддержки</h3><p>Организуют и проводят групповые встречи, поддерживая безопасные правила общения и уважение к границам участников.</p></article>
+          <article class="team-card reveal delay-2"><div class="team-symbol">↗</div><h3>Координаторы обращений</h3><p>Принимают первичные обращения, уточняют запрос и помогают сориентироваться в доступных форматах помощи.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Как получить помощь -->
+    <section class="section" id="process">
+      <div class="container">
+        <div class="section-heading reveal">
+          <span class="eyebrow">05 / Как получить помощь</span>
+          <h2>Первый шаг может<br>быть <span class="accent">простым.</span></h2>
+          <p>Необязательно заранее знать, что именно сказать или какой специалист нужен. Можно начать с описания того, что беспокоит.</p>
+        </div>
+        <div class="process">
+          <article class="process-step reveal"><h3>Свяжитесь с нами</h3><p>Оставьте обращение через форму, позвоните на кризисную линию или выберите удобный способ связи.</p></article>
+          <article class="process-step reveal delay-1"><h3>Опишите ситуацию</h3><p>Координатор поможет определить характер запроса и сориентирует по возможным форматам поддержки.</p></article>
+          <article class="process-step reveal delay-2"><h3>Получите поддержку</h3><p>Вместе со специалистом вы обсудите дальнейшие шаги и подходящий формат психологической помощи.</p></article>
+        </div>
+        <div class="format-note reveal">
+          <strong>Очный и дистанционный форматы</strong>
+          <p>Вы можете выбрать личную встречу в центре или онлайн-консультацию. Для групповой поддержки предусмотрены отдельные встречи по предварительной записи.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. Кризисная линия -->
+    <section class="section hotline" id="hotline">
+      <div class="container hotline-inner">
+        <div class="reveal">
+          <span class="eyebrow">06 / Круглосуточная поддержка</span>
+          <h2>Не оставайтесь<br>с трудностями<br><em>наедине.</em></h2>
+          <p>Если сейчас вам особенно тяжело, можно обратиться за первичной психологической поддержкой. Специалист поможет сориентироваться в ситуации и обсудить дальнейшие действия.</p>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <a class="brand" href="#home"><span class="brand-mark">т</span><span class="brand-name">Точка опоры</span></a>
+      <span>Учебный проект · Концепция кризисного психологического центра</span>
+      <span>Ваш путь продолжается.</span>
+    </div>
+  </footer>
+
+  <script>
+    // Плавное появление блоков при прокрутке
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // Изменение шапки при прокрутке
+    const header = document.getElementById('header');
+    const updateHeader = () => header.classList.toggle('scrolled', window.scrollY > 30);
+    window.addEventListener('scroll', updateHeader, { passive: true });
+    updateHeader();
+
+    // Мобильное меню
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+    menuToggle.addEventListener('click', () => {
+      const isOpen = navLinks.classList.toggle('open');
+      menuToggle.setAttribute('aria-expanded', String(isOpen));
+      menuToggle.setAttribute('aria-label', isOpen ? 'Закрыть меню' : 'Открыть меню');
+      menuToggle.textContent = isOpen ? '×' : '☰';
+    });
+    navLinks.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
+      navLinks.classList.remove('open');
+      menuToggle.setAttribute('aria-expanded', 'false');
+      menuToggle.textContent = '☰';
+    }));
+
+    // Аккордеон услуг
+    document.querySelectorAll('.service-trigger').forEach(button => {
+      button.addEventListener('click', () => {
+        const item = button.closest('.service-item');
+        const willOpen = !item.classList.contains('open');
+        document.querySelectorAll('.service-item').forEach(other => {
+          other.classList.remove('open');
+          other.querySelector('.service-trigger').setAttribute('aria-expanded', 'false');
+        });
+        if (willOpen) {
+          item.classList.add('open');
+          button.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+
+  </script>
+</body>
+</html>
